@@ -14,8 +14,23 @@
         <module>rpc_registry</module>
         <module>rpc_serialization</module>
         <module>rpc_common</module>
-        <module>rpc_dependencies_bom</module>
     </modules>
+
+    <properties>
+        <lombok_version>1.18.6</lombok_version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok_version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
 
 
 </project>
