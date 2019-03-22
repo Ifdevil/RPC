@@ -1,17 +1,15 @@
 package com.rpc.config.annotation;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
- * 调用服务注解
+ * RPC服务注解
  * @author ifdevil
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@Inherited
 public @interface RpcService {
 
     Class<?> interfaceClass() default void.class;
