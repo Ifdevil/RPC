@@ -10,6 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>rpc_registry</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>rpc_registry_api</module>
+    </modules>
 
 
 </project>
