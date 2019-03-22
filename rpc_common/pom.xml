@@ -12,8 +12,4 @@
     <artifactId>rpc_common</artifactId>
     <packaging>jar</packaging>
 
-
-    <dependencies>
-
-    </dependencies>
 </project>
