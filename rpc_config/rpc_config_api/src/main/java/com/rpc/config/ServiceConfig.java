@@ -9,14 +9,37 @@ import com.rpc.registry.Registry;
  */
 public class ServiceConfig<T> extends AbstractServiceConfig {
 
+    //应用配置
     private ApplicationConfig applicationConfig;
+    //注册中心配置
     private RegistryConfig registryConfig;
+    //传输协议
     private ProtocolConfig protocolConfig;
+    //服务接口
     private Class<T> interfaceClass;
+    //服务接口名称
     private String interfaceName;
+    //服务实现引用
     private T ref;
 
+
     public ServiceConfig(T ref){
+        this.ref = ref;
+    }
+
+    public ApplicationConfig getApplicationConfig() {
+        return applicationConfig;
+    }
+
+    public void setApplicationConfig(ApplicationConfig applicationConfig) {
+        this.applicationConfig = applicationConfig;
+    }
+
+    public T getRef() {
+        return ref;
+    }
+
+    public void setRef(T ref) {
         this.ref = ref;
     }
 
