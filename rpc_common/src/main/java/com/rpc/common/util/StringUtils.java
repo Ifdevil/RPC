@@ -2,9 +2,21 @@ package com.rpc.common.util;
 
 public class StringUtils {
 
+    /**
+     * 测空
+     * @param str
+     * @return
+     */
     public static boolean isEmpty(String str){
         return str==null || str.length()==0;
     }
+
+    /**
+     * 切割名称 StringUtils---> string.utils
+     * @param camelName
+     * @param split
+     * @return
+     */
     public static String camelToSplitName(String camelName, String split) {
         if (isEmpty(camelName)) {
             return camelName;
