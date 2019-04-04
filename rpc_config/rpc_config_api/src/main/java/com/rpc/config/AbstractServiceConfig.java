@@ -4,6 +4,7 @@ import com.rpc.common.Constants;
 import com.rpc.common.util.ConfigUtils;
 import com.rpc.registry.Registry;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
@@ -17,5 +18,14 @@ public abstract class AbstractServiceConfig extends AbstractConfig{
         if (ConfigUtils.getPid() > 0) {
             map.put(Constants.PID_KEY, String.valueOf(ConfigUtils.getPid()));
         }
+    }
+
+    static String[] getMehods(Class<?> c){
+        String[] methodstr = {};
+        Method[] methods = c.getMethods();
+        for (int i = 0;i<methods.length;i++){
+            methodstr[i] = methods[i].getName();
+        }
+        return methodstr;
     }
 }

@@ -50,6 +50,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     private void completeCompoundConfigs(){
 
     }
+
     private void checkAndUpdateConfigs(){
         checkApplication();
         checkProtocol();
@@ -63,26 +64,31 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
+
     private void checkApplication(){
         if(applicationConfig.isValid()){
             throw new IllegalStateException("No application config found");
         }
     }
+
     private void checkProtocol(){
         if(protocolConfig.isValid()){
             throw new IllegalStateException("No protocol config found or it's not a valid config! " +
                     "The protocol config is: " + protocolConfig);
         }
     }
+
     private void checkRegistry(){
         if (!registryConfig.isValid()) {
             throw new IllegalStateException("No registry config found or it's not a valid config! " +
                     "The registry config is: " + registryConfig);
         }
     }
+
     private void doExportUrls(){
         doExportUrlsFor1Protocol(protocolConfig, registryConfig);
     }
+
     private void doExportUrlsFor1Protocol(ProtocolConfig protocolConfig,RegistryConfig registryConfig){
         String name = protocolConfig.getName();
         if(StringUtils.isEmpty(name)){
@@ -91,6 +97,15 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         Map<String, String> map = new HashMap<String, String>();
         appendRuntimeParameters(map);
         appendParameters(map, applicationConfig);
+        String[] mehtods = getMehods(interfaceClass);
+        if(mehtods.length == 0){
+            logger.warn("No method found in service interface " + interfaceClass.getName());
+            map.put(Constants.METHODS_KEY, Constants.ANY_VALUE);
+        }
+
+        // export service
+
+
     }
 
 

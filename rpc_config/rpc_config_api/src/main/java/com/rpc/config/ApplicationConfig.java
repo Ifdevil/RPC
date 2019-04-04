@@ -1,6 +1,8 @@
 package com.rpc.config;
 
+import com.rpc.common.Constants;
 import com.rpc.common.util.StringUtils;
+import com.rpc.config.supports.Parameter;
 
 /**
  * 当前应用配置
@@ -27,7 +29,7 @@ public class ApplicationConfig {
 
 
     // ======================getter and setter =======================
-
+    @Parameter(key = Constants.APPLICATION_KEY)
     public String getName() {
         return name;
     }
