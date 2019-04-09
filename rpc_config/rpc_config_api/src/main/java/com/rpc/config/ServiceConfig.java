@@ -1,6 +1,7 @@
 package com.rpc.config;
 
 import com.rpc.common.Constants;
+import com.rpc.common.util.NetUtils;
 import com.rpc.common.util.StringUtils;
 
 import java.util.HashMap;
@@ -104,9 +105,42 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         }
 
         // export service
-
+        String host = this.findConfigedHosts(protocolConfig,map);
+        Integer port = this.findConfigedPorts(protocolConfig, map);
 
     }
+
+    private String findConfigedHosts(ProtocolConfig protocolConfig,Map<String, String> map){
+        boolean anyhost = true;
+        String hostToBind = NetUtils.getLocalHost();
+        map.put(Constants.BIND_IP_KEY,hostToBind);
+        map.put(Constants.ANYHOST_KEY, String.valueOf(anyhost));
+        return hostToBind;
+    }
+    private Integer findConfigedPorts(ProtocolConfig protocolConfig,Map<String,String> map){
+        Integer portToBind = null;
+        String port = protocolConfig.getPort();
+        portToBind = parsePort(port);
+        map.put(Constants.BIND_PORT_KEY, String.valueOf(portToBind));
+        return portToBind;
+    }
+
+    private Integer parsePort(String configPort) {
+        Integer port = null;
+        if (configPort != null && configPort.length() > 0) {
+            try {
+                Integer intPort = Integer.parseInt(configPort);
+                if (NetUtils.isInvalidPort(intPort)) {
+                    throw new IllegalArgumentException("Specified invalid port from env value:" + configPort);
+                }
+                port = intPort;
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Specified invalid port from env value:" + configPort);
+            }
+        }
+        return port;
+    }
+
 
 
 
