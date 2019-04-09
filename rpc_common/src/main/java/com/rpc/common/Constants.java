@@ -20,4 +20,12 @@ public class Constants {
 
     public static final String LOCALHOST_VALUE = "127.0.0.1";
 
+    public static final String ANYHOST_VALUE = "0.0.0.0";
+
+    public static final String BIND_IP_KEY = "bind.ip";
+
+    public static final String ANYHOST_KEY = "anyhost";
+
+    public static final String BIND_PORT_KEY = "bind.port";
+
 }

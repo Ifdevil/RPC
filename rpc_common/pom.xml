@@ -12,4 +12,14 @@
     <artifactId>rpc_common</artifactId>
     <packaging>jar</packaging>
 
+    <properties>
+        <java_source_version>1.8</java_source_version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+    </dependencies>
 </project>
