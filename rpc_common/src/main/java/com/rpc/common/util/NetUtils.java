@@ -80,6 +80,13 @@ public class NetUtils {
         return localAddress;
     }
 
+    public static String getIpByHost(String hostName){
+        try {
+            return InetAddress.getByName(hostName).getHostAddress();
+        } catch (UnknownHostException e) {
+            return hostName;
+        }
+    }
     /**
      * 检验InetAddress
      * @param inetAddress

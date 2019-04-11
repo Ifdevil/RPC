@@ -2,6 +2,9 @@ package com.rpc.common.util;
 
 public class StringUtils {
 
+    public static boolean isNotEmpty(String str) {
+        return !isEmpty(str);
+    }
     /**
      * 测空
      * @param str
