@@ -1,11 +1,16 @@
 package com.rpc.config;
 
 import com.rpc.common.Constants;
-import com.rpc.common.util.NetUtils;
+import com.rpc.common.URL;
 import com.rpc.common.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
+import static com.rpc.common.util.NetUtils.isInvalidPort;
+import static com.rpc.common.util.NetUtils.getLocalHost;
+import static com.rpc.common.util.NetUtils.isInvalidPort;
 
 /**
  * 服务配置入口
@@ -23,6 +28,8 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     private Class<?> interfaceClass;
     //服务接口名称
     private String interfaceName;
+    //服务名称
+    private String path;
     //服务实现引用
     private T ref;
 
@@ -87,6 +94,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
 
     private void doExportUrls(){
+        if (StringUtils.isEmpty(path)) {
+            path = interfaceName;
+        }
         doExportUrlsFor1Protocol(protocolConfig, registryConfig);
     }
 
@@ -108,15 +118,19 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         String host = this.findConfigedHosts(protocolConfig,map);
         Integer port = this.findConfigedPorts(protocolConfig, map);
 
-    }
+        URL url = new URL(name,host,port,getContextPath().map(p -> p +"/"+path).orElse(path),map);
 
+
+    }
+    //寻找配置的IP
     private String findConfigedHosts(ProtocolConfig protocolConfig,Map<String, String> map){
         boolean anyhost = true;
-        String hostToBind = NetUtils.getLocalHost();
+        String hostToBind = getLocalHost();
         map.put(Constants.BIND_IP_KEY,hostToBind);
         map.put(Constants.ANYHOST_KEY, String.valueOf(anyhost));
         return hostToBind;
     }
+    //寻找配置的端口
     private Integer findConfigedPorts(ProtocolConfig protocolConfig,Map<String,String> map){
         Integer portToBind = null;
         String port = protocolConfig.getPort();
@@ -124,13 +138,13 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         map.put(Constants.BIND_PORT_KEY, String.valueOf(portToBind));
         return portToBind;
     }
-
+    //解析端口
     private Integer parsePort(String configPort) {
         Integer port = null;
         if (configPort != null && configPort.length() > 0) {
             try {
                 Integer intPort = Integer.parseInt(configPort);
-                if (NetUtils.isInvalidPort(intPort)) {
+                if (isInvalidPort(intPort)) {
                     throw new IllegalArgumentException("Specified invalid port from env value:" + configPort);
                 }
                 port = intPort;
@@ -139,6 +153,11 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             }
         }
         return port;
+    }
+    //获取服务路径
+    private Optional<String> getContextPath(){
+        Optional<String> opt = Optional.ofNullable(path);
+        return opt;
     }
 
 
