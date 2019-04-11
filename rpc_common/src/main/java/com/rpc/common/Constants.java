@@ -32,4 +32,6 @@ public class Constants {
 
     public static final String SCOPE_KEY = "scope";
 
+    public static final String SCOPE_NONE = "none";
+
 }
