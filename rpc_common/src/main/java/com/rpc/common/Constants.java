@@ -30,4 +30,6 @@ public class Constants {
 
     public static final String INTERFACE_KEY = "interface";
 
+    public static final String SCOPE_KEY = "scope";
+
 }
