@@ -28,4 +28,6 @@ public class Constants {
 
     public static final String BIND_PORT_KEY = "bind.port";
 
+    public static final String INTERFACE_KEY = "interface";
+
 }
