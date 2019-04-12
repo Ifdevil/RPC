@@ -1,6 +1,19 @@
 package com.rpc.common.util;
 
+import java.util.regex.Pattern;
+
 public class StringUtils {
+
+    private static final Pattern INT_PATTERN = Pattern.compile(("\\d+$"));
+
+    public static boolean isInteger(String str) {
+        return isNotEmpty(str) && INT_PATTERN.matcher(str).matches();
+    }
+
+    public static int parseInteger(String str) {
+        return isInteger(str) ? Integer.parseInt(str) : 0;
+    }
+
 
     public static boolean isNotEmpty(String str) {
         return !isEmpty(str);

@@ -1,5 +1,7 @@
 package com.rpc.common;
 
+import java.util.regex.Pattern;
+
 public class Constants {
 
     public static final String RPC_FLY = "rpc_fly";
@@ -30,8 +32,22 @@ public class Constants {
 
     public static final String INTERFACE_KEY = "interface";
 
-    public static final String SCOPE_KEY = "scope";
+    public static final String PATH_KEY = "path";
 
-    public static final String SCOPE_NONE = "none";
+    public static final String PROTOCOL_KEY = "protocol";
 
+    public static final String RPC_FLY_PROTOCOL = RPC_FLY;
+
+    public static final String HOST_KEY = "host";
+
+    public static final String PORT_KEY = "port";
+
+
+
+
+    //===========正则校验================================
+
+
+    public static final Pattern REGISTRY_SPLIT_PATTERN = Pattern
+            .compile("\\s*[|;]+\\s*");
 }
