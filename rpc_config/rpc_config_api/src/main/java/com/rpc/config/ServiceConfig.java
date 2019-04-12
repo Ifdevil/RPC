@@ -4,9 +4,7 @@ import com.rpc.common.Constants;
 import com.rpc.common.URL;
 import com.rpc.common.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.rpc.common.util.NetUtils.isInvalidPort;
 import static com.rpc.common.util.NetUtils.getLocalHost;
@@ -18,12 +16,7 @@ import static com.rpc.common.util.NetUtils.isInvalidPort;
  */
 public class ServiceConfig<T> extends AbstractServiceConfig {
 
-    //应用配置
-    private ApplicationConfig applicationConfig;
-    //注册中心配置
-    private RegistryConfig registryConfig;
-    //传输协议
-    private ProtocolConfig protocolConfig;
+
     //服务接口
     private Class<?> interfaceClass;
     //服务接口名称
@@ -94,13 +87,14 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
 
     private void doExportUrls(){
+        List<URL> registryURLs = loadRegistries(true);
         if (StringUtils.isEmpty(path)) {
             path = interfaceName;
         }
-        doExportUrlsFor1Protocol(protocolConfig, registryConfig);
+        doExportUrlsFor1Protocol(protocolConfig, registryURLs);
     }
 
-    private void doExportUrlsFor1Protocol(ProtocolConfig protocolConfig,RegistryConfig registryConfig){
+    private void doExportUrlsFor1Protocol(ProtocolConfig protocolConfig,List<URL> registryURLs){
         String name = protocolConfig.getName();
         if(StringUtils.isEmpty(name)){
             name = Constants.RPC_FLY;
@@ -120,8 +114,14 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
         URL url = new URL(name,host,port,getContextPath().map(p -> p +"/"+path).orElse(path),map);
 
+        if(logger.isInfoEnabled()){
+            logger.info("Export dubbo service " + interfaceClass.getName() + " to url " + url);
+        }
+
+
 
     }
+
     //寻找配置的IP
     private String findConfigedHosts(ProtocolConfig protocolConfig,Map<String, String> map){
         boolean anyhost = true;
@@ -174,13 +174,6 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
     // ======================getter and setter =======================
 
-    public ApplicationConfig getApplicationConfig() {
-        return applicationConfig;
-    }
-
-    public void setApplicationConfig(ApplicationConfig applicationConfig) {
-        this.applicationConfig = applicationConfig;
-    }
 
     public T getRef() {
         return ref;
@@ -188,22 +181,6 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
     public void setRef(T ref) {
         this.ref = ref;
-    }
-
-    public ProtocolConfig getProtocolConfig() {
-        return protocolConfig;
-    }
-
-    public void setProtocolConfig(ProtocolConfig protocolConfig) {
-        this.protocolConfig = protocolConfig;
-    }
-
-    public RegistryConfig getRegistryConfig() {
-        return registryConfig;
-    }
-
-    public void setRegistryConfig(RegistryConfig registryConfig) {
-        this.registryConfig = registryConfig;
     }
 
     public Class<?> getInterfaceClass() {
