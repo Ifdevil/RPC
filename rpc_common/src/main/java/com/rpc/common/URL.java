@@ -34,6 +34,11 @@ public class URL implements Serializable {
             path = path.substring(1);
         }
         this.path = path;
+        if (parameters == null) {
+            parameters = new HashMap<>();
+        } else {
+            parameters = new HashMap<>(parameters);
+        }
         //返回有序映射--只读
         this.parameters = Collections.unmodifiableMap(parameters);;
     }

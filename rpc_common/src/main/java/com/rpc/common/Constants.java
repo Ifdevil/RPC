@@ -6,7 +6,7 @@ public class Constants {
 
     public static final String RPC_FLY = "rpc_fly";
 
-    public static final String RPC_FLY_VERSION_KEY = "rpc_fly";
+    public static final String RPC_FLY_VERSION_KEY = "rpc_fly_version";
 
     public static final String RPC_FLY_VERSION_VALUE= "1.0";
 

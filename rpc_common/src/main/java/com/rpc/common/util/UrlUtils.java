@@ -11,6 +11,12 @@ import java.util.Map;
 public class UrlUtils {
 
 
+    /**
+     * 把map解析为URL
+     * @param address
+     * @param defaults
+     * @return
+     */
     public static List<URL> parseURLs(String address, Map<String, String> defaults) {
         if (address == null || address.length() == 0) {
             return null;
@@ -26,6 +32,12 @@ public class UrlUtils {
         return registries;
     }
 
+    /**
+     * 把map解析为URL
+     * @param address
+     * @param defaults
+     * @return
+     */
     public static URL parseURL(String address, Map<String, String> defaults) {
         if(address == null || address.length()==0){
             return null;
