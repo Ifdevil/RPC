@@ -15,6 +15,7 @@
         <module>rpc_serialization</module>
         <module>rpc_common</module>
         <module>rpc_demo</module>
+        <module>rpc_rpc</module>
     </modules>
 
     <properties>
