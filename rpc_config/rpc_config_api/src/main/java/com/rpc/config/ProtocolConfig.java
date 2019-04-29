@@ -14,7 +14,7 @@ public class ProtocolConfig {
 
     public ProtocolConfig(String name,String port){
         setName(name);
-        setName(port);
+        setPort(port);
     }
 
     // ==================== method ===============================

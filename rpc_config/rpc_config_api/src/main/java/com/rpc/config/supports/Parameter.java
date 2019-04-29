@@ -10,4 +10,6 @@ import java.lang.annotation.Target;
 public @interface Parameter {
 
     String key() default "";
+
+    boolean excluded() default false;
 }

@@ -56,6 +56,10 @@ public abstract class AbstractServiceConfig extends AbstractConfig{
                 map.put(Constants.PROTOCOL_KEY, Constants.RPC_FLY);
             }
             List<URL> urls = UrlUtils.parseURLs(address, map);
+            for (URL url : urls) {
+                registryList.add(url);
+
+            }
         }
 
         return registryList;

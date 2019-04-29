@@ -2,7 +2,11 @@ package com.rpc.config;
 
 import com.rpc.common.Constants;
 import com.rpc.common.URL;
+import com.rpc.common.util.CollectionUtils;
 import com.rpc.common.util.StringUtils;
+import com.rpc.rpc.Invoker;
+import com.rpc.rpc.ProxyFactory;
+import com.rpc.rpc.proxy.jdk.JdkProxyFactory;
 
 import java.util.*;
 
@@ -17,6 +21,9 @@ import static com.rpc.common.util.NetUtils.isInvalidPort;
 public class ServiceConfig<T> extends AbstractServiceConfig {
 
 
+    private static final ProxyFactory proxyFactory = new JdkProxyFactory();
+
+
     //服务接口
     private Class<?> interfaceClass;
     //服务接口名称
@@ -25,8 +32,15 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     private String path;
     //服务实现引用
     private T ref;
+    /**
+     * The config id
+     */
+    protected String id;
+
+
 
     // ======================== constructor ========================
+
     public ServiceConfig(){}
     public ServiceConfig(T ref){
         this.ref = ref;
@@ -67,13 +81,13 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
 
     private void checkApplication(){
-        if(applicationConfig.isValid()){
+        if(!applicationConfig.isValid()){
             throw new IllegalStateException("No application config found");
         }
     }
 
     private void checkProtocol(){
-        if(protocolConfig.isValid()){
+        if(!protocolConfig.isValid()){
             throw new IllegalStateException("No protocol config found or it's not a valid config! " +
                     "The protocol config is: " + protocolConfig);
         }
@@ -115,8 +129,18 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         URL url = new URL(name,host,port,getContextPath().map(p -> p +"/"+path).orElse(path),map);
 
         if(logger.isInfoEnabled()){
-            logger.info("Export dubbo service " + interfaceClass.getName() + " to url " + url);
+            logger.info("Export rpcfily service " + interfaceClass.getName() + " to url " + url);
         }
+        if(CollectionUtils.isNotEmpty(registryURLs)){
+            for (URL registryURL : registryURLs) {
+                if (logger.isInfoEnabled()) {
+                    logger.info("Register rpcfly service " + interfaceClass.getName() + " url " + url + " to registry " + registryURL);
+                }
+            }
+            Invoker invoker = proxyFactory.getInvoker(ref,(Class)interfaceClass,url);
+
+        }
+
 
 
 
@@ -187,8 +211,19 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         return interfaceClass;
     }
 
-    public void setInterfaceClass(Class<T> interfaceClass) {
+    public void setInterfaceClass(Class<?> interfaceClass) {
+        if(interfaceClass != null && !interfaceClass.isInterface()){
+            throw new IllegalStateException("The interface class " + interfaceClass + " is not a interface!");
+        }
         this.interfaceClass = interfaceClass;
+        setInterface(interfaceClass == null ? null : interfaceClass.getName());
+
+    }
+    public void setInterface(String interfaceName) {
+        this.interfaceName = interfaceName;
+        if (StringUtils.isEmpty(id)) {
+            id = interfaceName;
+        }
     }
 
     public String getInterfaceName() {

@@ -18,6 +18,11 @@
             <artifactId>rpc_registry_api</artifactId>
             <version>${parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 </project>

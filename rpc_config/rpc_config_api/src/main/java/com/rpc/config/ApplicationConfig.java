@@ -21,7 +21,7 @@ public class ApplicationConfig {
 
     // ====================  method  ===============================
 
-
+    @Parameter(excluded = true)
     public boolean isValid() {
         return !StringUtils.isEmpty(name);
     }

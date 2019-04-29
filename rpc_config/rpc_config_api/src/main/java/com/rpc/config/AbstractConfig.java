@@ -33,6 +33,9 @@ public abstract class AbstractConfig {
                 String name = method.getName();
                 if (ClassHelper.isGetter(method)) {
                     Parameter parameter = method.getAnnotation(Parameter.class);
+                    if (method.getReturnType() == Object.class || parameter != null && parameter.excluded()) {
+                        continue;
+                    }
                     String key;
                     if(parameter != null && parameter.key().length()>0){
                         key = parameter.key();
