@@ -12,4 +12,16 @@
     <artifactId>rpc_rpc_api</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>com.rpcfly</groupId>
+            <artifactId>rpc_common</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
