@@ -42,8 +42,11 @@ public class Constants {
 
     public static final String PORT_KEY = "port";
 
-
-
+    public static final String VERSION_KEY = "version";
+    /**
+     * The key name for export URL in register center
+     */
+    public static final String EXPORT_KEY = "export";
 
     //===========正则校验================================
 
