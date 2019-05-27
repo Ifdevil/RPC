@@ -6,7 +6,10 @@ import com.rpc.common.util.NetUtils;
 import com.rpc.common.util.StringUtils;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * URL统一数据模型
@@ -25,6 +28,16 @@ public class URL implements Serializable {
     private final Map<String, String> parameters;
 
     private volatile transient String ip;
+
+
+    //-----------cache---------------
+    private volatile transient Map<String ,Number> numbers;
+    private volatile transient String full;
+
+
+
+
+    //-----------method--------------
 
     public URL (String protocol, String host, int port, String path, Map<String,String> parameters){
         this.protocol = protocol;
@@ -46,6 +59,16 @@ public class URL implements Serializable {
     @Override
     public String toString(){
         return buildString(true,true,true);
+    }
+
+    public String toFullString() {
+        if (full != null) {
+            return full;
+        }
+        return full = buildString(true, true);
+    }
+    private String buildString(boolean appendUser, boolean appendParameter, String... parameters) {
+        return buildString(appendParameter, false, false, parameters);
     }
     private String buildString(boolean appendParameter, boolean useIP, boolean useService, String... parameters){
         StringBuilder buf = new StringBuilder();
@@ -105,6 +128,11 @@ public class URL implements Serializable {
         }
     }
 
+    /**
+     * 将String url 转化为 URL对象
+     * @param url
+     * @return
+     */
     public static URL valueOf(String url) {
         if (url == null || (url = url.trim()).length() == 0) {
             throw new IllegalArgumentException("url == null");
@@ -173,9 +201,47 @@ public class URL implements Serializable {
         return new URL(protocol, host, port, path, parameters);
     }
 
+    /**
+     * 添加参数
+     * @param key
+     * @param value
+     * @return
+     */
+    public URL addParameterAndEncoded(String key, String value) {
+        if (StringUtils.isEmpty(value)) {
+            return this;
+        }
+        return addParameter(key, encode(value));
+    }
+    public URL addParameter(String key, String value) {
+        if (StringUtils.isEmpty(key)
+                || StringUtils.isEmpty(value)) {
+            return this;
+        }
+        // if value doesn't change, return immediately
+        if (value.equals(getParameters().get(key))) { // value != null
+            return this;
+        }
 
-
-
+        Map<String, String> map = new HashMap<>(getParameters());
+        map.put(key, value);
+        return new URL(protocol,host, port, path, map);
+    }
+    /**
+     * UTF-8编码
+     * @param value
+     * @return
+     */
+    public static String encode(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return "";
+        }
+        try {
+            return URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
     //=========== getter and setter ================
 
     public String getIp() {
@@ -184,13 +250,16 @@ public class URL implements Serializable {
         }
         return ip;
     }
+
     public String getServiceKey() {
         String inf = getServiceInterface();
         return inf;
     }
+
     public String getServiceInterface(){
         return getParameter(Constants.INTERFACE_KEY,path);
     }
+
     public String getParameter(String key, String defaultValue) {
         String value = getParameter(key);
         if (StringUtils.isEmpty(value)) {
@@ -198,15 +267,37 @@ public class URL implements Serializable {
         }
         return value;
     }
+
+    public int getParameter(String key,int defaultValue){
+        Number n = getNumbers().get(key);
+        if(n!=null){
+            return n.intValue();
+        }
+        String value = getParameter(key);
+        if(StringUtils.isEmpty(value)){
+            return defaultValue;
+        }
+        int i = Integer.parseInt(value);
+        getNumbers().put(key,i);
+        return i;
+    }
+
     public String getParameter(String key) {
         String value = parameters.get(key);
         return value;
     }
 
+    private Map<String,Number> getNumbers(){
+        if(numbers ==null){
+            numbers = new ConcurrentHashMap<>();
+        }
+        return numbers;
+    }
 
     public String getPath() {
         return path;
     }
+
     public String getProtocol() {
         return protocol;
     }
