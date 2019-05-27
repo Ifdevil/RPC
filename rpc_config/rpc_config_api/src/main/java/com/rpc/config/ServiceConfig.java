@@ -4,15 +4,18 @@ import com.rpc.common.Constants;
 import com.rpc.common.URL;
 import com.rpc.common.util.CollectionUtils;
 import com.rpc.common.util.StringUtils;
+import com.rpc.config.invoker.DelegateProviderMetaDataInvoker;
+import com.rpc.rpc.Exporter;
 import com.rpc.rpc.Invoker;
+import com.rpc.rpc.Protocol;
 import com.rpc.rpc.ProxyFactory;
 import com.rpc.rpc.proxy.jdk.JdkProxyFactory;
+import com.rpcfly.protocol.rpcfly.RpcFlyProtocol;
 
 import java.util.*;
 
 import static com.rpc.common.util.NetUtils.isInvalidPort;
 import static com.rpc.common.util.NetUtils.getLocalHost;
-import static com.rpc.common.util.NetUtils.isInvalidPort;
 
 /**
  * 服务配置入口
@@ -23,6 +26,9 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
     private static final ProxyFactory proxyFactory = new JdkProxyFactory();
 
+    private static final Protocol protocol = new RpcFlyProtocol();
+
+    private static final List<Exporter> expoters = new ArrayList<>();
 
     //服务接口
     private Class<?> interfaceClass;
@@ -65,7 +71,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     private void completeCompoundConfigs(){
 
     }
-
+    //校验
     private void checkAndUpdateConfigs(){
         checkApplication();
         checkProtocol();
@@ -79,35 +85,43 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
             throw new IllegalStateException(e.getMessage(), e);
         }
     }
-
+    //校验Application
     private void checkApplication(){
         if(!applicationConfig.isValid()){
             throw new IllegalStateException("No application config found");
         }
     }
-
+    //校验Protocol
     private void checkProtocol(){
         if(!protocolConfig.isValid()){
             throw new IllegalStateException("No protocol config found or it's not a valid config! " +
                     "The protocol config is: " + protocolConfig);
         }
     }
-
+    //校验Registry
     private void checkRegistry(){
         if (!registryConfig.isValid()) {
             throw new IllegalStateException("No registry config found or it's not a valid config! " +
                     "The registry config is: " + registryConfig);
         }
     }
-
+    //暴露服务
     private void doExportUrls(){
+        //加载所有定义的注册中心
+        //格式：multicast://127.0.0.1:1234/com.rpc.registry.RegistryService?address=multicast://127.0.0.1:1234&application=Rpc-demo-test&path=com.rpc.registry.RegistryService&protocol=rpc_fly
         List<URL> registryURLs = loadRegistries(true);
         if (StringUtils.isEmpty(path)) {
             path = interfaceName;
         }
+        //根据不同的协议暴露服务
         doExportUrlsFor1Protocol(protocolConfig, registryURLs);
     }
 
+    /**
+     * //根据不同的协议暴露服务
+     * @param protocolConfig  协议配置
+     * @param registryURLs  注册中心地址
+     */
     private void doExportUrlsFor1Protocol(ProtocolConfig protocolConfig,List<URL> registryURLs){
         String name = protocolConfig.getName();
         if(StringUtils.isEmpty(name)){
@@ -123,8 +137,8 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         }
 
         // export service
-        String host = this.findConfigedHosts(protocolConfig,map);
-        Integer port = this.findConfigedPorts(protocolConfig, map);
+        String host = this.findConfigedHosts(protocolConfig,map);//获取host
+        Integer port = this.findConfigedPorts(protocolConfig, map);//获取端口
 
         URL url = new URL(name,host,port,getContextPath().map(p -> p +"/"+path).orElse(path),map);
 
@@ -136,8 +150,11 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                 if (logger.isInfoEnabled()) {
                     logger.info("Register rpcfly service " + interfaceClass.getName() + " url " + url + " to registry " + registryURL);
                 }
+                System.out.println(registryURL.toString());
+                //生成代理对象，包装在invoker
+                Invoker invoker = proxyFactory.getInvoker(ref,(Class)interfaceClass,registryURL.addParameterAndEncoded(Constants.EXPORT_KEY,url.toFullString()));
+                DelegateProviderMetaDataInvoker wapperInvoker = new DelegateProviderMetaDataInvoker(invoker,this);
             }
-            Invoker invoker = proxyFactory.getInvoker(ref,(Class)interfaceClass,url);
 
         }
 
