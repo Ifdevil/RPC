@@ -9,12 +9,11 @@ import com.rpc.config.supports.Parameter;
 public class RegistryConfig {
 
     private String address;
-
     // ======================== constructor ========================
 
     public RegistryConfig(){
 
-    };
+    }
     public RegistryConfig(String address){
         setAddress(address);
     }
