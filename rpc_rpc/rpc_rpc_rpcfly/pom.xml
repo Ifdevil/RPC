@@ -3,17 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>rpc</artifactId>
+        <artifactId>rpc_rpc</artifactId>
         <groupId>com.rpcfly</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>rpc_rpc</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>rpc_rpc_api</module>
-        <module>rpc_rpc_rpcfly</module>
-    </modules>
+    <artifactId>rpc_rpc_rpcfly</artifactId>
+    <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.rpcfly</groupId>
+            <artifactId>rpc_rpc_api</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+    </dependencies>
 </project>

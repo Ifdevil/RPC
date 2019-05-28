@@ -19,10 +19,23 @@
             <version>${parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>com.rpcfly</groupId>
+            <artifactId>rpc_common</artifactId>
+            <version>${parent.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.rpcfly</groupId>
+            <artifactId>rpc_rpc_api</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.rpcfly</groupId>
+            <artifactId>rpc_rpc_rpcfly</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
     </dependencies>
 </project>

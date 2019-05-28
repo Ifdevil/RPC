@@ -15,21 +15,4 @@
         <module>rpc_config_api</module>
     </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.rpcfly</groupId>
-            <artifactId>rpc_common</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.rpcfly</groupId>
-            <artifactId>rpc_rpc_api</artifactId>
-            <version>${parent.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-    </dependencies>
-
 </project>
