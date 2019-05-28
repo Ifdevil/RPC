@@ -28,7 +28,10 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
     private static final Protocol protocol = new RpcFlyProtocol();
 
-    private static final List<Exporter> expoters = new ArrayList<>();
+    /**
+     * The exported services
+     */
+    private final List<Exporter<?>> exporters = new ArrayList<Exporter<?>>();
 
     //服务接口
     private Class<?> interfaceClass;
@@ -137,8 +140,8 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         }
 
         // export service
-        String host = this.findConfigedHosts(protocolConfig,map);//获取host
-        Integer port = this.findConfigedPorts(protocolConfig, map);//获取端口
+        String host = this.findConfigedHosts(protocolConfig,map);// 获取host
+        Integer port = this.findConfigedPorts(protocolConfig, map);// 获取端口
 
         URL url = new URL(name,host,port,getContextPath().map(p -> p +"/"+path).orElse(path),map);
 
@@ -151,9 +154,12 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                     logger.info("Register rpcfly service " + interfaceClass.getName() + " url " + url + " to registry " + registryURL);
                 }
                 System.out.println(registryURL.toString());
-                //生成代理对象，包装在invoker
+                // 为服务提供类(ref)生成 Invoker
                 Invoker invoker = proxyFactory.getInvoker(ref,(Class)interfaceClass,registryURL.addParameterAndEncoded(Constants.EXPORT_KEY,url.toFullString()));
                 DelegateProviderMetaDataInvoker wapperInvoker = new DelegateProviderMetaDataInvoker(invoker,this);
+                // 导出服务，并生成 Exporter
+                Exporter<?> exporter = protocol.export(wapperInvoker);
+                exporters.add(exporter);
             }
 
         }
