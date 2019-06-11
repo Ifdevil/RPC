@@ -43,6 +43,16 @@ public class Constants {
     public static final String PORT_KEY = "port";
 
     public static final String VERSION_KEY = "version";
+
+
+
+    public static final String REGISTRY_PROTOCOL = "registry";
+
+    public static final String DEFAULT_PROTOCOL = "rpc_fly";
+
+
+
+    public static final String REGISTRY_KEY = "registry";
     /**
      * The key name for export URL in register center
      */
