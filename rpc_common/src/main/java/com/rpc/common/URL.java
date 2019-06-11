@@ -7,6 +7,7 @@ import com.rpc.common.util.StringUtils;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -213,6 +214,13 @@ public class URL implements Serializable {
         }
         return addParameter(key, encode(value));
     }
+
+    /**
+     * 添加参数
+     * @param key
+     * @param value
+     * @return
+     */
     public URL addParameter(String key, String value) {
         if (StringUtils.isEmpty(key)
                 || StringUtils.isEmpty(value)) {
@@ -227,6 +235,38 @@ public class URL implements Serializable {
         map.put(key, value);
         return new URL(protocol,host, port, path, map);
     }
+
+    /**
+     * 删除指定ke
+     * @param key
+     * @return
+     */
+    public URL removeParameter(String key) {
+        if (StringUtils.isEmpty(key)) {
+            return this;
+        }
+        return removeParameters(key);
+    }
+
+    /**
+     * 删除指定key
+     * @param keys
+     * @return
+     */
+    public URL removeParameters(String... keys) {
+        if (keys == null || keys.length == 0) {
+            return this;
+        }
+        Map<String, String> map = new HashMap<>(getParameters());
+        for (String key : keys) {
+            map.remove(key);
+        }
+        if (map.size() == getParameters().size()) {
+            return this;
+        }
+        return new URL(protocol, host, port, path, map);
+    }
+
     /**
      * UTF-8编码
      * @param value
@@ -238,6 +278,25 @@ public class URL implements Serializable {
         }
         try {
             return URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public String getParameterAndDecoded(String key) {
+        return getParameterAndDecoded(key, null);
+    }
+
+    public String getParameterAndDecoded(String key, String defaultValue) {
+        return decode(getParameter(key, defaultValue));
+    }
+
+    public static String decode(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return "";
+        }
+        try {
+            return URLDecoder.decode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -312,5 +371,9 @@ public class URL implements Serializable {
 
     public Map<String, String> getParameters() {
         return parameters;
+    }
+
+    public URL setProtocol(String protocol) {
+        return new URL(protocol, host, port, path, getParameters());
     }
 }
