@@ -44,6 +44,8 @@ public class Constants {
 
     public static final String VERSION_KEY = "version";
 
+    public static final String DEFAULT_KEY_PREFIX = "default.";
+
 
 
     public static final String REGISTRY_PROTOCOL = "registry";
@@ -57,6 +59,25 @@ public class Constants {
      * The key name for export URL in register center
      */
     public static final String EXPORT_KEY = "export";
+
+
+
+
+    /**
+     * key for router type, for e.g., "script"/"file",  corresponding to ScriptRouterFactory.NAME, FileRouterFactory.NAME
+     */
+
+    public static final String HEARTBEAT_KEY = "heartbeat";
+
+
+
+
+    /**
+     * By default, a consumer JVM instance and a provider JVM instance share a long TCP connection (except when connections are set),
+     * which can set the number of long TCP connections shared to avoid the bottleneck of sharing a single long TCP connection.
+     */
+
+    public static final int DEFAULT_HEARTBEAT = 60 * 1000;
 
     //===========正则校验================================
 

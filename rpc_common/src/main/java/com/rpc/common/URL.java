@@ -301,7 +301,12 @@ public class URL implements Serializable {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+
+    public String getAddress() {
+        return port <= 0 ? host : host + ":" + port;
+    }
     //=========== getter and setter ================
+
 
     public String getIp() {
         if (ip == null) {
