@@ -4,6 +4,10 @@ import java.util.regex.Pattern;
 
 public class Constants {
 
+    /**
+     * ServiceConfig
+     */
+
     public static final String RPC_FLY = "rpc_fly";
 
     public static final String RPC_FLY_VERSION_KEY = "rpc_fly_version";
@@ -64,13 +68,19 @@ public class Constants {
 
 
     /**
-     * key for router type, for e.g., "script"/"file",  corresponding to ScriptRouterFactory.NAME, FileRouterFactory.NAME
+     * 定义服务器实例
      */
-
     public static final String HEARTBEAT_KEY = "heartbeat";
 
+    public static final String CODEC_KEY = "codec";
 
+    public static final String SERVER_KEY = "server";
 
+    public static final String DEFAULT_REMOTING_SERVER = "netty";
+
+    public static final String EXCHANGER_KEY = "exchanger";
+
+    public static final String DEFAULT_EXCHANGER = "header";
 
     /**
      * By default, a consumer JVM instance and a provider JVM instance share a long TCP connection (except when connections are set),

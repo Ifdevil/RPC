@@ -37,8 +37,8 @@ public class URL implements Serializable {
 
 
 
+    //-----------constructer--------------
 
-    //-----------method--------------
 
     public URL (String protocol, String host, int port, String path, Map<String,String> parameters){
         this.protocol = protocol;
@@ -57,10 +57,7 @@ public class URL implements Serializable {
         this.parameters = Collections.unmodifiableMap(parameters);;
     }
 
-    @Override
-    public String toString(){
-        return buildString(true,true,true);
-    }
+    //-----------method--------------
 
     public String toFullString() {
         if (full != null) {
@@ -68,9 +65,11 @@ public class URL implements Serializable {
         }
         return full = buildString(true, true);
     }
+
     private String buildString(boolean appendUser, boolean appendParameter, String... parameters) {
         return buildString(appendParameter, false, false, parameters);
     }
+
     private String buildString(boolean appendParameter, boolean useIP, boolean useService, String... parameters){
         StringBuilder buf = new StringBuilder();
         if (StringUtils.isNotEmpty(protocol)) {
@@ -105,6 +104,7 @@ public class URL implements Serializable {
         }
         return buf.toString();
     }
+
     //拼接参数
     private void buildParameters(StringBuilder buf, boolean concat, String[] parameters) {
         if (CollectionUtils.isNotEmptyMap(getParameters())) {
@@ -237,6 +237,25 @@ public class URL implements Serializable {
     }
 
     /**
+     * 添加参数
+     * @param key
+     * @param value
+     * @return
+     */
+    public URL addParameterIfAbsent(String key, String value) {
+        if (StringUtils.isEmpty(key)
+                || StringUtils.isEmpty(value)) {
+            return this;
+        }
+        if (hasParameter(key)) {
+            return this;
+        }
+        Map<String, String> map = new HashMap<>(getParameters());
+        map.put(key, value);
+        return new URL(protocol,host, port, path, map);
+    }
+
+    /**
      * 删除指定ke
      * @param key
      * @return
@@ -287,6 +306,11 @@ public class URL implements Serializable {
         return getParameterAndDecoded(key, null);
     }
 
+    public boolean hasParameter(String key) {
+        String value = getParameter(key);
+        return value != null && value.length() > 0;
+    }
+
     public String getParameterAndDecoded(String key, String defaultValue) {
         return decode(getParameter(key, defaultValue));
     }
@@ -305,6 +329,12 @@ public class URL implements Serializable {
     public String getAddress() {
         return port <= 0 ? host : host + ":" + port;
     }
+
+    @Override
+    public String toString(){
+        return buildString(true,true,true);
+    }
+
     //=========== getter and setter ================
 
 
