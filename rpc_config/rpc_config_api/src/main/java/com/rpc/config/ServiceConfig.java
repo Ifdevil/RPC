@@ -5,6 +5,7 @@ import com.rpc.common.URL;
 import com.rpc.common.util.CollectionUtils;
 import com.rpc.common.util.StringUtils;
 import com.rpc.config.invoker.DelegateProviderMetaDataInvoker;
+import com.rpc.registry.integration.RegistryProtocol;
 import com.rpc.rpc.Exporter;
 import com.rpc.rpc.Invoker;
 import com.rpc.rpc.Protocol;
@@ -26,7 +27,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
     private static final ProxyFactory proxyFactory = new JdkProxyFactory();
 
-    private static final Protocol protocol = new RpcFlyProtocol();
+    private static final Protocol protocol = new RegistryProtocol();
 
     /**
      * The exported services
@@ -146,7 +147,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         URL url = new URL(name,host,port,getContextPath().map(p -> p +"/"+path).orElse(path),map);
 
         if(logger.isInfoEnabled()){
-            logger.info("Export rpcfily service " + interfaceClass.getName() + " to url " + url);
+            logger.info("Export rpcfly service " + interfaceClass.getName() + " to url " + url);
         }
         if(CollectionUtils.isNotEmpty(registryURLs)){
             for (URL registryURL : registryURLs) {
@@ -154,7 +155,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
                     logger.info("Register rpcfly service " + interfaceClass.getName() + " url " + url + " to registry " + registryURL);
                 }
                 System.out.println(registryURL.toString());
-                // 为服务提供类(ref)生成 Invoker
+                // 为服务提供类(ref)生成 Invoker------------这里添加EXPORT_KEY为什么要URL编解码
                 Invoker invoker = proxyFactory.getInvoker(ref,(Class)interfaceClass,registryURL.addParameterAndEncoded(Constants.EXPORT_KEY,url.toFullString()));
                 DelegateProviderMetaDataInvoker wapperInvoker = new DelegateProviderMetaDataInvoker(invoker,this);
                 // 导出服务，并生成 Exporter
