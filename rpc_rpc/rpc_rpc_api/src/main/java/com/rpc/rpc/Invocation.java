@@ -1,5 +1,7 @@
 package com.rpc.rpc;
 
+import java.util.Map;
+
 public interface Invocation {
 
     String getMethodName();
@@ -19,4 +21,6 @@ public interface Invocation {
      * @serial
      */
     Object[] getArguments();
+
+    Map<String, String> getAttachments();
 }

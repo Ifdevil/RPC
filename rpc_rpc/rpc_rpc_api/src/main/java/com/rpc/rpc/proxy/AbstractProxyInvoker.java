@@ -9,8 +9,11 @@ import com.rpc.rpc.*;
  */
 public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
 
+    // 被代理的服务引用
     private final T proxy;
+    // 被代理的服务类
     private final Class<T> type;
+    // URL
     private final URL url;
 
     public AbstractProxyInvoker(T proxy,Class<T> type,URL url){
@@ -49,6 +52,7 @@ public abstract class AbstractProxyInvoker<T> implements Invoker<T> {
 
     }
 
+    // 调用方法
     @Override
     public Result invoke(Invocation invocation){
         try {
