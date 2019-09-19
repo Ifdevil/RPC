@@ -18,5 +18,11 @@
             <artifactId>rpc_rpc_api</artifactId>
             <version>${parent.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.rpcfly</groupId>
+            <artifactId>rpcfly_remoting_api</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
     </dependencies>
 </project>
