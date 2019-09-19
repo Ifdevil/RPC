@@ -80,6 +80,13 @@ public class RegistryProtocol implements Protocol {
         return URL.valueOf(export);
     }
 
+    /**
+     * 暴露服务，启动服务
+     * @param originInvoker
+     * @param providerUrl
+     * @param <T>
+     * @return
+     */
     private <T> ExporterChangeableWrapper<T> dolocalExport(final Invoker<T> originInvoker,URL providerUrl){
         String key = getCacheKey(originInvoker);
         return ( ExporterChangeableWrapper<T> ) bounds.computeIfAbsent(key,s -> {
@@ -88,6 +95,11 @@ public class RegistryProtocol implements Protocol {
         });
     }
 
+    /**
+     * 获取provider url 的字符串
+     * @param originInvoker
+     * @return
+     */
     private String getCacheKey(final Invoker<?> originInvoker) {
         URL providerUrl = getProviderUrl(originInvoker);
         String key = providerUrl.toFullString();
