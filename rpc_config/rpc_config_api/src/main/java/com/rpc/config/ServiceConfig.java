@@ -204,7 +204,8 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     }
     //获取服务路径
     private Optional<String> getContextPath(){
-        Optional<String> opt = Optional.ofNullable(path);
+        // path
+        Optional<String> opt = Optional.ofNullable(null);
         return opt;
     }
 
