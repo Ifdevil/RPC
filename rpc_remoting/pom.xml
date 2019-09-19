@@ -10,6 +10,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>rpc-remoting</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>rpcfly_remoting_api</module>
+    </modules>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>com.rpcfly</groupId>
+            <artifactId>rpc_common</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+    </dependencies>
 </project>
